@@ -3,10 +3,12 @@
 class Sweeper
 {
   Servo servo;              // the servo
+  int pin;
   int pos;              // current servo position 
   int increment;        // increment to move for each interval
   int  updateInterval;      // interval between updates
   unsigned long lastUpdate; // last update of position
+  unsigned long lastUpdate2; // last update of position
   int nowaPozycja;
   int pozycja;
   int tmpP;
@@ -18,5 +20,7 @@ public:
   void Detach();
   void Update();
   void UpdateManual(int & newpos);
+  void Reset(bool &stateON);
+  void Reset();
 
 };

@@ -8,18 +8,39 @@
     tmpP=servo.read();
     pozycja = servo.read();
     waiter = false;
-	servo.write(90);
 	lastPosition = 0;
   }
   
-  void Sweeper::Attach(int pin)
+  void Sweeper::Attach(int _pin)
   {
-    servo.attach(pin,500, 2400);
+    servo.attach(_pin,500, 2400);
+	pin = _pin;
   }
   
   void Sweeper::Detach()
   {
     servo.detach();
+  }
+  
+  void Sweeper::Reset(bool &stateON )
+  {
+	 servo.detach(); 
+	 servo.attach(pin,500, 2400);
+	 servo.write(0);
+	 //pozycja = servo.read();
+	 
+		//stateON = true; 
+	
+	 
+  }
+  
+    void Sweeper::Reset()
+  {
+	 servo.detach(); 
+	 servo.attach(pin,500, 2400);
+	 
+	 
+	 //pozycja = servo.read();
   }
   
   void Sweeper::Update()
@@ -69,7 +90,7 @@
   {
     if((millis() - lastUpdate) > updateInterval)  // time to update
     {
-       lastUpdate = millis();
+       lastUpdate2 = millis();
     //++pozycja;
 	
 	 

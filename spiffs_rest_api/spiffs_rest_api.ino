@@ -101,22 +101,33 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t lenght
      // we get other control data i.e. #1 - toggle manual/automatic engine movement
       if ((char)payload[0] == 'M') {            
          if((char)payload[1] == '1'){
+         
+           delay(1000);
           engineManualControllMovement = true;
            Serial.printf("engineManualControllMovement=true");
+          ;
           }else if((char)payload[1] == '0'){
+           
+             delay(1000);
             engineManualControllMovement = false;
              Serial.printf("engineManualControllMovement=false");
             }
+             String initManualControllStatusMessage = String("M"+String(engineManualControllMovement));
+             webSocket.sendTXT(num, initManualControllStatusMessage);
       }
 
       if ((char)payload[0] == 'S') {            
          if((char)payload[1] == '1'){
+           sweeper1.Attach(14);
+ sweeper2.Attach(13);
           stateON = true;
            Serial.printf("stateON=%d",stateON);
             String initStateMessage = String("S"+String(stateON));
            webSocket.sendTXT(num, initStateMessage);
           }else if((char)payload[1] == '0'){
              stateON = false;
+             sweeper1.Detach();
+             sweeper2.Detach();
            Serial.printf("stateON=%d",false);
             String initStateMessage = String("S"+String(stateON));
         webSocket.sendTXT(num, initStateMessage);

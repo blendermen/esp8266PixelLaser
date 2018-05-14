@@ -99,9 +99,11 @@ function turnOffOn(){
 }
 
 //button manual/auto state
-function turnkManualOrAutomaticControll(){
+function turnManualOrAutomaticControll(){
 	console.log("current control state:" + engineManualControllMovement + " -> target state:" + (!engineManualControllMovement));
-	connection.send("S"+Number(!engineManualControllMovement)); //send to server: S for state 1.on 0.off
+
+	connection.send("M"+Number(!engineManualControllMovement)); //send to server: S for state 1.on 0.off
+	
 }
 
 //Sends mouse coordination data to ESP
