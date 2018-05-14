@@ -52,12 +52,16 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t lenght
       break;
     case WStype_CONNECTED: {              // if a new websocket connection is established
         IPAddress ip = webSocket.remoteIP(num);
-       // Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
-        //rainbw = false;                  // Turn rainbow off when a new connection is established
-        // send message to client
+       // Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);        
+       
+        // send state ON/OFF message to client
         String initStateMessage = String("S"+String(stateON));
         webSocket.sendTXT(num, initStateMessage);
-        
+
+        // send controll manual/auto message to client
+        String initManualControllStatusMessage = String("M"+String(engineManualControllMovement));
+        webSocket.sendTXT(num, initManualControllStatusMessage);
+  
       }
       break;
     case WStype_TEXT:                     // if new text data is received

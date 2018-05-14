@@ -1,22 +1,27 @@
 var connection = new WebSocket('ws://' + location.hostname + ':81/', ['arduino']);
-var engineManualControllMovement = false;
+var engineManualControllMovement;
 var stateON;
-connection.onopen = function (e) {
-	var messageFromServer = e.data;	
-	console.log("Connection established." + messageFromServer )
-    connection.send('Connect ' + new Date());
 
+connection.onopen = function () {
+    connection.send('Connect ' + new Date());
 };
+
 connection.onerror = function (error) {
   console.log('WebSocket Error ', error);
 };
 
-//handle message from server:\	
+//handle message from server:
 connection.onmessage = function (e) {
-  var messageFromServer = e.data;	
+  var messageFromServer = e.data;
+  
+  //get state ON/OFF  
   checkStateOnOffFromServer(messageFromServer);
+  //get status of manual/auto control
+  checkManualOrAutomaticControll(messageFromServer);
+  
   console.log('Message from server: ', messageFromServer);
 };
+
 connection.onclose = function () {
   console.log('WebSocket connection closed');
 };
@@ -70,25 +75,33 @@ function showCoords(event){
 	}
 }
 
-function rainbowEffect () {
-	engineManualControllMovement = !engineManualControllMovement; //toggle control
-	console.log("engineManualControllMovement=" + engineManualControllMovement); 
-	if(engineManualControllMovement)
-    {
-	    $( "#log" ).css('background-color', 'red');
-		$( "#log" ).text( "Sterowanie manualne" );
-			 //showCoords(event);
-	}else{
-	    $( "#log" ).css('background-color', '#70dae0');
-		$( "#log" ).text( "Sterowanie automatyczne" );
+//get Manual or Auto servo-controlling
+function checkManualOrAutomaticControll (stateFromServer) {
+	if(stateFromServer.charAt(0) == 'M'){
+		if(stateFromServer.charAt(1) == '1')
+		{
+			engineManualControllMovement = true;
+			$( "#log" ).css('background-color', 'red');
+			$( "#log" ).text( "Sterowanie manualne" );
+				 //showCoords(event);
+		}else{
+			engineManualControllMovement = false;
+			$( "#log" ).css('background-color', '#70dae0');
+			$( "#log" ).text( "Sterowanie automatyczne" );
+		}
 	}
-  connection.send("M"+Number(engineManualControllMovement)); //M for Manual movement
 }
 
+//button toggle ON/OFF state
 function turnOffOn(){
-	console.log("current state:" + stateON + " -> target state:" + (!stateON));
-	connection.send("S"+Number(!stateON)); //S for state 1.on 0.off
-	
+	console.log("current ON/OFF state:" + stateON + " -> target state:" + (!stateON));
+	connection.send("S"+Number(!stateON)); //send to server: S for state 1.on 0.off
+}
+
+//button manual/auto state
+function turnkManualOrAutomaticControll(){
+	console.log("current control state:" + engineManualControllMovement + " -> target state:" + (!engineManualControllMovement));
+	connection.send("S"+Number(!engineManualControllMovement)); //send to server: S for state 1.on 0.off
 }
 
 //Sends mouse coordination data to ESP
