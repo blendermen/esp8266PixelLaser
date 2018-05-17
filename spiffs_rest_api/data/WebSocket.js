@@ -65,7 +65,7 @@ function showCoords(event){
 		 var screenWidth = $("#cord").width();
 		 var screenHeight = $("#cord").height();
 		 var mousePositionX = ((event.clientX-8.5)-(screenWidth/2)); //8.5 to margines lewy
-		 var mousePositionY = ((event.clientY-28.5)-(screenHeight/2)); //tak samo tylko ze gorny
+		 var mousePositionY = ((event.clientY-48.5)-(screenHeight/2)); //tak samo tylko ze gorny
 		 var max = 181;
 		 var valueX = (mousePositionX / screenWidth) * max;
 		 var valueY = (mousePositionY / screenHeight) * max;

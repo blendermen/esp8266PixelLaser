@@ -42,7 +42,7 @@ int ypos;
  int xEngine;
          int yEngine;
 bool isConnectedToWifi = false;
-bool engineManualControllMovement = true;;
+bool engineManualControllMovement = false;;
 bool stateON = true;
 
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t lenght) { // When a WebSocket message is received
@@ -119,13 +119,15 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t lenght
       if ((char)payload[0] == 'S') {            
          if((char)payload[1] == '1'){
            sweeper1.Attach(14);
- sweeper2.Attach(13);
-          stateON = true;
+           sweeper2.Attach(13);
+           stateON = true;
+           digitalWrite(12, HIGH);
            Serial.printf("stateON=%d",stateON);
             String initStateMessage = String("S"+String(stateON));
            webSocket.sendTXT(num, initStateMessage);
           }else if((char)payload[1] == '0'){
              stateON = false;
+             digitalWrite(12, LOW);
              sweeper1.Detach();
              sweeper2.Detach();
            Serial.printf("stateON=%d",false);
@@ -151,6 +153,9 @@ void startWebSocket() { // Start a WebSocket server
 
 
 void setup() {
+  //laser pin
+   pinMode(12, OUTPUT);
+   digitalWrite(12, HIGH);
   DEBUG_BEGIN; //for terminal debugging
   DEBUG_PRINT();
  // WiFi.disconnect();
